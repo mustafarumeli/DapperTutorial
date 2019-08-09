@@ -1,5 +1,4 @@
 ﻿using DapperCrud.Interfaces.SqlCommadInterfaces;
-using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,50 +6,36 @@ namespace DapperCrud.AbstractClasses.SqlCommad
 {
     public class SqlCommands<T> : ISqlCommands<T> where T : DbTable
     {
-        public string GetSelectCommand()
+        SelectCommand<T> _selectCommand;
+        DeleteCommand<T> _deleteCommand;
+        InsertCommand<T> _insertCommand;
+        UpdateCommand<T> _updateCommand;
+
+        public SqlCommands()
         {
-            return "Select * from " + typeof(T).Name;
+            _selectCommand = new SelectCommand<T>();
+            _deleteCommand = new DeleteCommand<T>();
+            _insertCommand = new InsertCommand<T>();
+            _updateCommand = new UpdateCommand<T>();
         }
         public string GetDeleteCommand()
         {
-            var type = typeof(T);
-            var properties = type.GetProperties();
-            string sqlCommand = $"Delete {type.Name}";
-            sqlCommand += Environment.NewLine + "Where Id = @Id";
-            return sqlCommand;
+            return _deleteCommand.GetDeleteCommand();
         }
+
         public string GetInsertCommand()
         {
-            var type = typeof(T);
-            var properties = type.GetProperties();
-            string sqlCommand = $"Insert into {type.Name}(";
-            foreach (System.Reflection.PropertyInfo property in properties)
-            {
-                sqlCommand += property.Name + ",";
-            }
-            sqlCommand = sqlCommand.Substring(0, sqlCommand.Length - 1);
-            sqlCommand += ") ";
-            sqlCommand += "values(";
-            foreach (System.Reflection.PropertyInfo property in properties)
-            {
-                sqlCommand += "@" + property.Name + ",";
-            }
-            sqlCommand = sqlCommand.Substring(0, sqlCommand.Length - 1);
-            sqlCommand += ")";
-            return sqlCommand;
+            return _insertCommand.GetInsertCommand();
         }
+
+        public string GetSelectCommand()
+        {
+            return _selectCommand.GetSelectCommand();
+        }
+
         public string GetUpdateSql()
         {
-            var type = typeof(T);
-            var properties = type.GetProperties();
-            string sqlCommand = $"Update {type.Name} set " + Environment.NewLine;
-            foreach (System.Reflection.PropertyInfo property in properties)
-            {
-                sqlCommand += property.Name + " = @" + property.Name + ",";
-            }
-            sqlCommand = sqlCommand.Substring(0, sqlCommand.Length - 1);
-            sqlCommand += Environment.NewLine + "Where Id = @Id";
-            return sqlCommand;
+            return _updateCommand.GetUpdateSql();
         }
     }
 
