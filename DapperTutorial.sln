@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DapperTutorial", "DapperTut
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DapperCrud", "DapperCrud\DapperCrud.csproj", "{07FF5164-B5A3-4F56-B0C3-A002749B17E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DapperMid", "DapperMid\DapperMid.csproj", "{FA1810CC-FF8F-487F-B65C-83FC90E156A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DapperMid", "DapperMid\DapperMid.csproj", "{FA1810CC-FF8F-487F-B65C-83FC90E156A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

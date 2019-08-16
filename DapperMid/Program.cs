@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Diagnostics;
+using System.Linq.Expressions;
 
 namespace DapperMid
 {
@@ -76,18 +77,41 @@ namespace DapperMid
                 eval(item);
             }
         }
-    }
-    class Ctor<T>
-    {
-        List<Type> _fKeyList;
-        List<PropertyInfo> _props;
-        List<(Type type, PropertyInfo prop)> _test;
-        public Ctor()
+
+        public static Ctor<T> Include<T, P>(this Ctor<T> input, Expression<Func<T, P>> property)
         {
-            _fKeyList = new List<Type>();
-            _fKeyList.Add(typeof(T));
-            _props = new List<PropertyInfo>();
-            _test = new List<(Type type, PropertyInfo prop)>();
+            if (property == null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+            PropertyInfo prop;
+            if (property.Body is UnaryExpression unaryExp && unaryExp.Operand is MemberExpression memberExp)
+            {
+                prop = (PropertyInfo)memberExp.Member;
+                input.FkList.Add(prop.PropertyType);
+                input.Props.Add(prop);
+            }
+            else if (property.Body is MemberExpression pMemberExp)
+            {
+                prop = (PropertyInfo)pMemberExp.Member;
+                input.FkList.Add(prop.PropertyType);
+                input.Props.Add(prop);
+            }
+
+            return input;
+        }
+    }
+
+
+    public class Ctor<T>
+    {
+        public List<Type> FkList = new List<Type>();
+        public List<PropertyInfo> Props = new List<PropertyInfo>();
+        SqlConnection _db;
+        public Ctor(SqlConnection db)
+        {
+            this._db = db;
+            FkList.Add(typeof(T));
         }
         /// <summary>
         /// Uses Refelection to create a select command 
@@ -95,54 +119,17 @@ namespace DapperMid
         /// </summary>
         /// <param name="classType">To Find Base Table Name </param>
         /// <param name="joinDirection">This will indicate the direction of join default value is "inner"</param>
-        /// <param name="selectType">Enum SelectType determines return value's complexity see Enum Definiton for MoreInfo</param>
         /// <returns>select command as string</returns>
-        string GetSelectWithJoin(Type classType, string joinDirection, SelectType selectType)
+        string GetSelectWithJoin(string joinDirection)
         {
-            PropertyInfo[] props = classType.GetProperties();
-            var baseType = typeof(DataTable);
             var fKType = typeof(ForeignKeyAttribute);
-            string baseName = classType.Name;
-            string command = "Select * from " + baseName;
-            if (selectType == SelectType.Lazy)
-            {
-                return command;
-            }
-            foreach (PropertyInfo prop in props)
+            string command = "Select * from " + typeof(T).Name;
+            foreach (var prop in Props)
             {
                 CustomAttributeData fkAttr = prop.CustomAttributes.FirstOrDefault(x => x.AttributeType == fKType);
-                if (fkAttr != null)
-                {
-                    // Add Property to the select statement
-                    _props.Add(prop);
-                    string fkName = fkAttr.ConstructorArguments[0].Value.ToString();
-                    string currentTableName = prop.PropertyType.Name;
-                    _fKeyList.Add(prop.PropertyType);
-                    command += $" {joinDirection} Join {currentTableName} on {baseName}.{fkName} = {currentTableName}.Id";
-
-                    if (selectType == SelectType.Full)
-                    {
-                        LookInside(prop.PropertyType);
-                    }
-                    // Checks Property's type for possible ForeignKeys recursively
-                    void LookInside(Type propType)
-                    {
-                        foreach (var inSideProp in propType.GetProperties())
-                        {
-                            CustomAttributeData fkAttr = inSideProp.CustomAttributes.FirstOrDefault(x => x.AttributeType == fKType);
-                            if (fkAttr != null)
-                            {
-                                _props.Add(inSideProp);
-                                string insideFkName = fkAttr.ConstructorArguments[0].Value.ToString();
-                                string currentTableName = inSideProp.PropertyType.Name;
-
-                                _fKeyList.Add(inSideProp.PropertyType);
-                                command += $" {joinDirection} Join {currentTableName} on {propType.Name}.{insideFkName} = {currentTableName}.Id";
-                                LookInside(inSideProp.PropertyType);
-                            }
-                        }
-                    }
-                }
+                string fkName = fkAttr.ConstructorArguments[0].Value.ToString();
+                string currentTableName = prop.PropertyType.Name;
+                command += $" {joinDirection} Join {currentTableName} on {prop.ReflectedType.Name}.{fkName} = {currentTableName}.Id";
             }
             return command;
         }
@@ -157,70 +144,45 @@ namespace DapperMid
         /// <param name="joinDirection">This will indicate the direction of join default value is "inner"</param>
         /// <param name="selectType">Enum SelectType determines return value's complexity see Enum Definiton for MoreInfo</param>
         /// <returns>An IEnumerable of Given type</returns>
-        public IEnumerable<T> Select(SqlConnection con, string whereClause = null, string joinDirection = "inner", SelectType selectType = SelectType.BaseOnly)
+        public IEnumerable<T> Select(string whereClause = null, string joinDirection = "inner")
         {
-            string command = GetSelectWithJoin(typeof(T), joinDirection, selectType);
+            string command = GetSelectWithJoin(joinDirection);
             if (string.IsNullOrWhiteSpace(whereClause) == false)
             {
                 command += " " + whereClause;
             }
-            if (selectType == SelectType.Lazy)
-            {
-                return con.Query<T>(command);
-            }
-            return con.Query(command, _fKeyList.ToArray(),
-                objects =>
-             {
-                 foreach (PropertyInfo prop in _props)
-                 {
-                     string name = prop.PropertyType.Name;
-                     if (selectType == SelectType.Full)
-                     {
-                         object valueObject = objects.FirstOrDefault(x => x.GetType().Name == name);
-                         objects.Do(
-                                obj =>
-                                {
-                                    PropertyInfo cprop = obj.GetType().GetProperty(prop.Name);
-                                    if (cprop != null)
-                                    {
-                                        cprop.SetValue(obj, valueObject);
-                                    }
-                                });
-                     }
-                     else
-                     {
-                         object valueObject = objects.FirstOrDefault(x => x.GetType().Name == name);
-                         prop.SetValue(objects[0], valueObject);
-                     }
-
-                 }
-                 return (T)objects[0];
-             }
-            );
+            return _db.Query(command, FkList.ToArray(),
+              objects =>
+              {
+                  foreach (PropertyInfo prop in Props)
+                  {
+                      object valueObject = objects.First(x => x.GetType() == prop.PropertyType);
+                      object propObject = objects.First(x => x.GetType() == prop.DeclaringType);
+                      prop.SetValue(propObject, valueObject);
+                  }
+                  return (T)objects[0];
+              });
         }
-
-
     }
+
     class Program
     {
         static void Main(string[] args)
         {
             string connectionString = "Data Source=.;Initial Catalog=DapperTest;Integrated Security=True;"; //Wrong Way
             var conn = new SqlConnection(connectionString);
-            var pctor = new Ctor<Person>();
-            // IEnumerable<Person> data = pctor.Select(conn); 
-            IEnumerable<Person> data = pctor.Select(conn, selectType: SelectType.BaseOnly);
-            // IEnumerable<Person> data = pctor.Select(conn, selectType: SelectType.Full);  <= This Equals code bellow
-            //string sql = "Select * from Person inner Join Address on Person.Address_Id = Address.Id inner Join PersonSecret on Person.Secret_Id = PersonSecret.Id inner Join SecretToken on PersonSecret.SecretToken_Id = SecretToken.Id inner Join PersonCard on Person.Card_Id = PersonCard.Id";
-            //IEnumerable<Person> data = conn.Query<Person, Address, PersonCard, PersonSecret, SecretToken, Person>(sql,
-            //    (p, a, pc, ps, st) =>
-            //    {
-            //        p.Adress = a;
-            //        p.PersonCard = pc;
-            //        ps.SecretToken = st;
-            //        p.PersonSecret = ps;
-            //        return p;
-            //    });
+            conn.Open();
+            var pctor = new Ctor<Person>(conn)
+                          .Include(x => x.Adress)
+                          .Include(x => x.PersonCard)
+                          .Include(x => x.PersonSecret)
+                          .Include(x => x.PersonSecret.SecretToken);
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            IEnumerable<Person> data = pctor.Select();
+            Console.WriteLine(data.Count());
+            sw.Stop();
+            Console.WriteLine(sw.ElapsedMilliseconds);
             Console.ReadKey();
         }
     }
