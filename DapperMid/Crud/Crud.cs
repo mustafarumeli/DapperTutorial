@@ -39,7 +39,7 @@ namespace DapperMid.Crud
         {
             _crudOperations.AddToProperties(property);
         }
-        public int Insert(T entity)
+        public int Insert(object entity)
         {
             return _crudOperations.Insert(entity);
         }

@@ -4,6 +4,10 @@ namespace DapperMid.DataTables
 {
     class PersonCard : DataTable
     {
+        public PersonCard()
+        {
+
+        }
         public PersonCard(string cardNo)
         {
             CardNo = cardNo ?? throw new ArgumentNullException(nameof(cardNo));

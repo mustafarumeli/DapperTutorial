@@ -12,7 +12,7 @@ namespace DapperMid.Crud
     class CrudOperations<T> : IRepository<T> where T : DataTable
     {
         ISelect<T> _selectOperations;
-        IInsert<T> _insertOperations;
+        IInsert _insertOperations;
         SqlConnection _db;
         public CrudOperations(SqlConnection db)
         {
@@ -34,7 +34,7 @@ namespace DapperMid.Crud
             _selectOperations.AddToProperties(property);
         }
 
-        public int Insert(T entity)
+        public int Insert(object entity)
         {
             return _insertOperations.Insert(entity);
         }

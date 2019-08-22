@@ -1,10 +1,14 @@
-﻿using System;
-using DapperMid.Attributes;
+﻿using DapperMid.Attributes;
+using System;
 
 namespace DapperMid.DataTables
 {
     class Person : DataTable
     {
+        public Person()
+        {
+
+        }
         public Person(string name, Address adress, PersonSecret personSecret, PersonCard personCard)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));

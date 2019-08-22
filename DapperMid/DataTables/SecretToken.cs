@@ -4,6 +4,10 @@ namespace DapperMid.DataTables
 {
     class SecretToken : DataTable
     {
+        public SecretToken()
+        {
+
+        }
         public SecretToken(string token)
         {
             Token = token ?? throw new ArgumentNullException(nameof(token));
