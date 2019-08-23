@@ -9,7 +9,7 @@ using System.Text;
 
 namespace DapperMid.Crud
 {
-    class CrudOperations<T> : IRepository<T> where T : DataTable
+    class CrudOperations<T> : IRepository<T> where T : Datatable
     {
         ISelect<T> _selectOperations;
         IInsert _insertOperations;
@@ -34,7 +34,7 @@ namespace DapperMid.Crud
             _selectOperations.AddToProperties(property);
         }
 
-        public int Insert(object entity)
+        public int Insert(Datatable entity)
         {
             return _insertOperations.Insert(entity);
         }

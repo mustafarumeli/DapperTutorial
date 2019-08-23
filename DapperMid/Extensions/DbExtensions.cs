@@ -17,7 +17,7 @@ namespace DapperMid.Extensions
         /// <typeparam name="T">Database Table</typeparam>
         /// <param name="self">Crud we want count on</param>
         /// <returns></returns>
-        public static int Count<T>(this Crud<T> self) where T : DataTable
+        public static int Count<T>(this Crud<T> self) where T : Datatable
         {
             SqlConnection con = self.GetCurrentSqlConnection();
             string sqlCommand = $"Select Count(Id) from {typeof(T).Name}";
@@ -33,7 +33,7 @@ namespace DapperMid.Extensions
         /// <param name="expression"></param>
         /// <returns>Summation of given column at expression</returns>
         public static P Sum<T, P>(this Crud<T> self, Expression<Func<T, P>> expression)
-            where T : DataTable
+            where T : Datatable
             where P : struct, IConvertible
         {
             string name = "Id";
@@ -62,7 +62,7 @@ namespace DapperMid.Extensions
         /// <param name="expression"></param>
         /// <returns>Minimum value  of given column</returns>
         public static P Min<T, P>(this Crud<T> self, Expression<Func<T, P>> expression)
-            where T : DataTable
+            where T : Datatable
             where P : struct, IConvertible
         {
             string name = "Id";
@@ -91,7 +91,7 @@ namespace DapperMid.Extensions
         /// <param name="expression"></param>
         /// <returns>Max value  of given column</returns>
         public static P Max<T, P>(this Crud<T> self, Expression<Func<T, P>> expression)
-            where T : DataTable
+            where T : Datatable
             where P : struct, IConvertible
         {
             string name = "Id";
@@ -120,7 +120,7 @@ namespace DapperMid.Extensions
         /// <param name="expression"></param>
         /// <returns>Avarage value  of given column</returns>
         public static double Avg<T, P>(this Crud<T> self, Expression<Func<T, P>> expression)
-            where T : DataTable
+            where T : Datatable
             where P : struct, IConvertible
         {
             string name = "Id";

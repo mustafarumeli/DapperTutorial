@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace DapperMid.PrototypeClasses
 {
-    class InsertCommand<T> : IGetInsertSql<T> where T : DataTable
+    class InsertCommand<T> : IGetInsertSql<T> where T : Datatable
     {
 
         public string GetInsertSql(Type type = null)

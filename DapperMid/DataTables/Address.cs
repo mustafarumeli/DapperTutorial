@@ -3,7 +3,7 @@
 namespace DapperMid.DataTables
 {
 
-    class Address : DataTable
+    class Address : Datatable
     {
         public Address()
         {

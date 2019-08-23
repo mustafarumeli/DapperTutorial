@@ -2,7 +2,7 @@
 
 namespace DapperMid.DataTables
 {
-    class SecretToken : DataTable
+    class SecretToken : Datatable
     {
         public SecretToken()
         {

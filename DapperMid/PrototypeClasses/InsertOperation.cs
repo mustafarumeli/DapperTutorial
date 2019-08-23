@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace DapperMid.PrototypeClasses
 {
-    class InsertOperation<T> : IInsert where T : DataTable
+    class InsertOperation<T> : IInsert where T : Datatable
     {
         IGetInsertSql<T> _getInsertSql { get; }
         SqlConnection _db { get; }
@@ -27,12 +27,8 @@ namespace DapperMid.PrototypeClasses
         /// </summary>
         /// <param name="entity">varible to insert must be datatable</param>
         /// <returns></returns>
-        public int Insert(object entity)
+        public int Insert(Datatable entity)
         {
-            if (!entity.GetType().IsSubclassOf(typeof(DataTable)))
-            {
-                throw new Exception("Entity must be a Datatable");
-            }
             // reason with expand object is a typical class holds foreign keys as 
             // property with reffering class but in database they are just fields
             // so we need a way to convert datatable class to proper datatable Table
@@ -47,7 +43,7 @@ namespace DapperMid.PrototypeClasses
                 {
                     // We get that object
                     var innerObj = prop.GetValue(entity);
-                    Insert(innerObj); // We insert it to the database (recursively)
+                    Insert((Datatable)innerObj); // We insert it to the database (recursively)
                     var id = innerObj.GetType().GetProperty("Id").GetValue(innerObj); // We get the id of it
                     string fkName = fkAttr.ConstructorArguments[0].Value.ToString(); // We get the Field Name in Database
                     expandoDict.Add(fkName, id); // We add it to expando with using dict (it will eventually will be a property(woah!!))
@@ -60,6 +56,7 @@ namespace DapperMid.PrototypeClasses
             string sqlCommand = _getInsertSql.GetInsertSql(entityType); // We get the insert command for entityType(T)
             return _db.Execute(sqlCommand, (object)expando); // We use dapper Execute function we provide sqlCommand and expando as object
         }
+
 
     }
 }

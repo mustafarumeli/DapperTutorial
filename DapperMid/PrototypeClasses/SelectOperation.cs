@@ -8,7 +8,7 @@ using System.Linq;
 using System.Reflection;
 namespace DapperMid.PrototypeClasses
 {
-    class SelectOperations<T> : ISelect<T> where T : DataTable
+    class SelectOperations<T> : ISelect<T> where T : Datatable
     {
         List<Type> _fkList { get; }
         HashSet<PropertyInfo> _props { get; }

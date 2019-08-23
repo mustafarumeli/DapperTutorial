@@ -3,7 +3,7 @@ using System;
 
 namespace DapperMid.DataTables
 {
-    class Person : DataTable
+    class Person : Datatable
     {
         public Person()
         {

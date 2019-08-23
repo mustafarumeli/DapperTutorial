@@ -1,14 +1,14 @@
 ﻿using System;
 namespace DapperMid.DataTables
 {
-    public class DataTable
+    public abstract class Datatable
     {
-        public DataTable()
+        public Datatable()
         {
             Id = Guid.NewGuid().ToString();
         }
 
-        public string Id { get; set; }
+        public string Id { get; }
     }
 }
 

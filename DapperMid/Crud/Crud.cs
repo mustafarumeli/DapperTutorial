@@ -12,7 +12,7 @@ namespace DapperMid.Crud
     /// A Façade? class for Managening Crud(Create,Read,Update,Delete) ....
     /// </summary>
     /// <typeparam name="T">Table which currently perform must inherit from DataTable</typeparam>
-    public class Crud<T> : ICrudRequirements, IRepository<T> where T : DataTable
+    public class Crud<T> : ICrudRequirements, IRepository<T> where T : Datatable
     {
         //neccesary for Decorator Pattern better if given in Ctor probably from a DI container
         CrudOperations<T> _crudOperations;
@@ -39,7 +39,7 @@ namespace DapperMid.Crud
         {
             _crudOperations.AddToProperties(property);
         }
-        public int Insert(object entity)
+        public int Insert(Datatable entity)
         {
             return _crudOperations.Insert(entity);
         }

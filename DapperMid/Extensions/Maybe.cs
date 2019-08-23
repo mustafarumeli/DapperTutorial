@@ -31,7 +31,7 @@ namespace DapperMid.Extensions
         /// <param name="self">Ctor</param>
         /// <param name="property"></param>
         /// <returns>Self for Fluent Purposes</returns>
-        public static Crud<T> Include<T, P>(this Crud<T> self, Expression<Func<T, P>> property) where T : DataTable
+        public static Crud<T> Include<T, P>(this Crud<T> self, Expression<Func<T, P>> property) where T : Datatable
         {
             if (property == null)
             {

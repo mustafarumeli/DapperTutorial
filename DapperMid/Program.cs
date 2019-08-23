@@ -19,14 +19,14 @@ namespace DapperMid
                             .Include(x => x.PersonCard)
                             .Include(x => x.PersonSecret)
                             .Include(x => x.PersonSecret.SecretToken);
-            var adress = new Address("' OR 1=1 --");
-            var personCard = new PersonCard("123");
-            var secretToken = new SecretToken("Token");
-            var personSecret = new PersonSecret("has none", secretToken);
-            var person = new Person("ads", adress, personSecret, personCard);
+            var adress = new Address("asdqewd-");
+            var personCard = new PersonCard("dvdcxv");
+            var secretToken = new SecretToken("Toke123123n");
+            var personSecret = new PersonSecret("has3123 none", secretToken);
+            var person = new Person("ad3213s", adress, personSecret, personCard);
             var result = personTable.Insert(person);
             Console.WriteLine($"{result} ");
-             IEnumerable<Person> data = personTable.Select(top: 100000);
+            //  IEnumerable<Person> data = personTable.Select(top: 100000);
             ////Console.WriteLine(personCtor.Min(x => x.Id));
             //Console.WriteLine(personTable?.Count());
             conn.Close();

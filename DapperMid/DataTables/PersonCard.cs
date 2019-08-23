@@ -2,7 +2,7 @@
 
 namespace DapperMid.DataTables
 {
-    class PersonCard : DataTable
+    class PersonCard : Datatable
     {
         public PersonCard()
         {
