@@ -7,7 +7,6 @@ namespace DapperMid.DataTables
     {
         public PersonSecret()
         {
-
         }
         public PersonSecret(string secret, SecretToken secretToken)
         {

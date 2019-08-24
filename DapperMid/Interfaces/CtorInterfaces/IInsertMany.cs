@@ -5,6 +5,6 @@ namespace DapperMid.Interfaces.CtorInterfaces
 {
     public interface IInsertMany<T> where T : Datatable
     {
-        int InsertMany(T[] entities);
+        int InsertMany(params T[] entities);
     }
 }

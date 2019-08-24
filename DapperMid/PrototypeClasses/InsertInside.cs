@@ -10,25 +10,17 @@ using System.Linq;
 
 namespace DapperMid.PrototypeClasses
 {
-    class InsertOperation<T> : IInsert<T> where T : Datatable
+    class InsertInside : IInsertInside
     {
-        IInsertCommand<T> _insertCommand { get; }
+        IInsertCommand<Datatable> _insertCommand { get; }
         SqlConnection _db { get; }
-        IInsertInside _insertInside;
-
-        public InsertOperation(SqlConnection db, IInsertCommand<T> insertCommand, IInsertInside insertInside)
+        public InsertInside(SqlConnection db)
         {
-            _insertCommand = insertCommand ?? throw new ArgumentNullException(nameof(insertCommand));
+            _insertCommand = new InsertCommand<Datatable>();
             _db = db ?? throw new ArgumentNullException(nameof(db));
-            _insertInside = insertInside ?? throw new ArgumentNullException(nameof(insertInside));
         }
 
-        /// <summary>
-        /// Uses Dapper, performs sql insert operation recursively from bottom foreign key to top
-        /// </summary>
-        /// <param name="entity">varible to insert must be datatable</param>
-        /// <returns>Affected Row Count</returns>
-        public int Insert(T entity)
+        public int Insert(Datatable entity)
         {
             // reason with expand object is a typical class holds foreign keys as 
             // property with reffering class but in database they are just fields
@@ -44,7 +36,7 @@ namespace DapperMid.PrototypeClasses
                 {
                     // We get that object
                     var innerObj = prop.GetValue(entity);
-                    _insertInside.Insert((Datatable)innerObj); // We insert it to the database (recursively)
+                    Insert((Datatable)innerObj); // We insert it to the database (recursively)
                     var id = innerObj.GetType().GetProperty("Id").GetValue(innerObj); // We get the id of it
                     string fkName = fkAttr.ConstructorArguments[0].Value.ToString(); // We get the Field Name in Database
                     expandoDict.Add(fkName, id); // We add it to expando with using dict (it will eventually will be a property(woah!!))
@@ -56,8 +48,7 @@ namespace DapperMid.PrototypeClasses
             }
             string sqlCommand = _insertCommand.GetInsertCommand(entityType); // We get the insert command for entityType(T)
             return _db.Execute(sqlCommand, (object)expando); // We use dapper Execute function we provide sqlCommand and expando as object
+
         }
-
-
     }
 }

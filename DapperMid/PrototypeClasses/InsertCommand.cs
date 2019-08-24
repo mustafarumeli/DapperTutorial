@@ -7,12 +7,12 @@ using System.Reflection;
 
 namespace DapperMid.PrototypeClasses
 {
-    class InsertCommand<T> : IGetInsertSql<T> where T : Datatable
-    {
 
-        public string GetInsertSql(Type type = null)
+    class InsertCommand<T> : IInsertCommand<T> where T : Datatable
+    {
+        public string GetInsertCommand(Type type = null)
         {
-            type = type ?? typeof(T);
+            type ??= typeof(T);
             Type fkType = typeof(ForeignKeyAttribute);
             PropertyInfo[] properties = type.GetProperties();
             string sqlCommand = $"Insert into {type.Name}(";

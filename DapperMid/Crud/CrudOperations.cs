@@ -5,24 +5,27 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Reflection;
-using System.Text;
 
 namespace DapperMid.Crud
 {
     class CrudOperations<T> : IRepository<T> where T : Datatable
     {
-        ISelect<T> _selectOperations;
-        IInsert _insertOperations;
-        SqlConnection _db;
+        readonly ISelect<T> _selectOperations;
+        readonly IInsert<T> _insertOperations;
+        readonly SqlConnection _db;
         public CrudOperations(SqlConnection db)
         {
+            //Better if provided via a DI Container
             _db = db;
             //Better if provided via a DI Container
             var selectCommand = new SelectCommand<T>();
             _selectOperations = new SelectOperations<T>(db, selectCommand);
+
             //Better if provided via a DI Container
             var insertCommand = new InsertCommand<T>();
-            _insertOperations = new InsertOperation<T>(db, insertCommand);
+            //Better if provided via a DI Container
+            var insertInside = new InsertInside(_db);
+            _insertOperations = new InsertOperation<T>(db, insertCommand, insertInside);
         }
         public void AddToForeignKeyList(Type type)
         {
@@ -34,12 +37,12 @@ namespace DapperMid.Crud
             _selectOperations.AddToProperties(property);
         }
 
-        public int Insert(Datatable entity)
+        public int Insert(T entity)
         {
             return _insertOperations.Insert(entity);
         }
 
-        public int InsertMany(T[] entities)
+        public int InsertMany(params T[] entities)
         {
             throw new NotImplementedException();
         }

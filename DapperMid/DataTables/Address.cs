@@ -2,12 +2,10 @@
 
 namespace DapperMid.DataTables
 {
-
     class Address : Datatable
     {
         public Address()
         {
-
         }
         public Address(string desc)
         {
@@ -15,6 +13,7 @@ namespace DapperMid.DataTables
         }
 
         public string Desc { get; set; }
+
     }
 }
 

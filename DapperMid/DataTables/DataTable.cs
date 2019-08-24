@@ -3,12 +3,12 @@ namespace DapperMid.DataTables
 {
     public abstract class Datatable
     {
-        public Datatable()
+        public string Id { get; }
+
+        protected Datatable()
         {
             Id = Guid.NewGuid().ToString();
         }
-
-        public string Id { get; }
     }
 }
 

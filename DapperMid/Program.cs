@@ -2,8 +2,9 @@
 using DapperMid.DataTables;
 using DapperMid.Extensions;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Data.SqlClient;
+using System.Collections.Generic;
 
 namespace DapperMid
 {
@@ -24,11 +25,11 @@ namespace DapperMid
             var secretToken = new SecretToken("Toke123123n");
             var personSecret = new PersonSecret("has3123 none", secretToken);
             var person = new Person("ad3213s", adress, personSecret, personCard);
-            var result = personTable.Insert(person);
-            Console.WriteLine($"{result} ");
-            //  IEnumerable<Person> data = personTable.Select(top: 100000);
-            ////Console.WriteLine(personCtor.Min(x => x.Id));
-            //Console.WriteLine(personTable?.Count());
+            //  var result = personTable.Insert(person);
+            //Console.WriteLine($"{result} ");
+            IEnumerable<Person> data = personTable.Select(top: 100000);
+            //Console.WriteLine(personCtor.Min(x => x.Id));
+            Console.WriteLine(personTable?.Count());
             conn.Close();
             Console.ReadKey();
         }

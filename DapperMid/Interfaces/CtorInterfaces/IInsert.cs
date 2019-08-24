@@ -3,8 +3,9 @@ using DapperMid.DataTables;
 
 namespace DapperMid.Interfaces.CtorInterfaces
 {
-    public interface IInsert
+    public interface IInsert<T> where T : Datatable
     {
-        int Insert(Datatable entity);
+        int Insert(T entity);
     }
+
 }

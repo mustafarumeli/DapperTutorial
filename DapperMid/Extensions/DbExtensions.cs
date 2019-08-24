@@ -23,7 +23,6 @@ namespace DapperMid.Extensions
             string sqlCommand = $"Select Count(Id) from {typeof(T).Name}";
             return (int)con.ExecuteScalar(sqlCommand);
         }
-
         /// <summary>
         /// Uses Dapper, Creates a select statetment which adds given column together and returns result  
         /// </summary>
@@ -33,8 +32,8 @@ namespace DapperMid.Extensions
         /// <param name="expression"></param>
         /// <returns>Summation of given column at expression</returns>
         public static P Sum<T, P>(this Crud<T> self, Expression<Func<T, P>> expression)
-            where T : Datatable
-            where P : struct, IConvertible
+              where T : Datatable
+              where P : struct, IConvertible
         {
             string name = "Id";
             if (expression.Body is UnaryExpression unaryExp && unaryExp.Operand is MemberExpression memberExp)

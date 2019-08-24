@@ -1,13 +1,11 @@
 ﻿using DapperMid.DataTables;
 using DapperMid.Interfaces.CtorInterfaces;
-using DapperMid.PrototypeClasses;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Reflection;
 namespace DapperMid.Crud
 {
-
     /// <summary>
     /// A Façade? class for Managening Crud(Create,Read,Update,Delete) ....
     /// </summary>
@@ -39,11 +37,11 @@ namespace DapperMid.Crud
         {
             _crudOperations.AddToProperties(property);
         }
-        public int Insert(Datatable entity)
+        public int Insert(T entity)
         {
             return _crudOperations.Insert(entity);
         }
-        public int InsertMany(T[] entities)
+        public int InsertMany(params T[] entities)
         {
             throw new NotImplementedException();
         }
