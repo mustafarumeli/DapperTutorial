@@ -7,7 +7,7 @@ namespace DapperMid.DataTables
         public PersonCard()
         {
         }
-        public PersonCard(string cardNo) 
+        public PersonCard(string cardNo)
         {
             CardNo = cardNo ?? throw new ArgumentNullException(nameof(cardNo));
         }

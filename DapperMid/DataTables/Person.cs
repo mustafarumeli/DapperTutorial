@@ -8,7 +8,7 @@ namespace DapperMid.DataTables
         public Person()
         {
         }
-        public Person(string name, Address adress, PersonSecret personSecret, PersonCard personCard) 
+        public Person(string name, Address adress, PersonSecret personSecret, PersonCard personCard)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Adress = adress ?? throw new ArgumentNullException(nameof(adress));

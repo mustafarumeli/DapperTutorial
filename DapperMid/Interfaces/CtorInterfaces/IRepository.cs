@@ -2,7 +2,7 @@
 
 namespace DapperMid.Interfaces.CtorInterfaces
 {
-    public interface IRepository<T> : ISelect<T>, IInsert<T>, IInsertMany<T> where T : Datatable
+    interface IRepository<T> : ISelect<T>, IInsert<T>, IInsertMany<T>, IRemove<T> where T : Datatable
     {
 
     }

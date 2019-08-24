@@ -7,6 +7,7 @@ using System.Reflection;
 
 namespace DapperMid.PrototypeClasses
 {
+
     class SelectCommand<T> : IGetSelectCommand where T : Datatable
     {
 

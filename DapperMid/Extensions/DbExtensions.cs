@@ -1,9 +1,9 @@
-﻿using DapperMid.Crud;
+﻿using Dapper;
+using DapperMid.Crud;
 using DapperMid.DataTables;
-using Dapper;
-using System.Linq.Expressions;
 using System;
 using System.Data.SqlClient;
+using System.Linq.Expressions;
 
 namespace DapperMid.Extensions
 {

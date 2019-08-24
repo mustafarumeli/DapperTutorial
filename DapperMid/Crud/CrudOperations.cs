@@ -12,6 +12,7 @@ namespace DapperMid.Crud
     {
         readonly ISelect<T> _selectOperations;
         readonly IInsert<T> _insertOperations;
+        readonly IRemove<T> _removeOperations;
         readonly SqlConnection _db;
         public CrudOperations(SqlConnection db)
         {
@@ -26,27 +27,39 @@ namespace DapperMid.Crud
             //Better if provided via a DI Container
             var insertInside = new InsertInside(_db);
             _insertOperations = new InsertOperation<T>(db, insertCommand, insertInside);
+
+            //Better if provided via a DI Container
+            var removeCommand = new RemoveCommand<T>();
+            _removeOperations = new RemoveOperations<T>(db, removeCommand);
         }
         public void AddToForeignKeyList(Type type)
         {
             _selectOperations.AddToForeignKeyList(type);
         }
-
         public void AddToProperties(PropertyInfo property)
         {
             _selectOperations.AddToProperties(property);
         }
-
         public int Insert(T entity)
         {
             return _insertOperations.Insert(entity);
         }
-
         public int InsertMany(params T[] entities)
         {
             throw new NotImplementedException();
         }
-
+        public int RemeoveWithWhereClause(string whereClaues)
+        {
+            return _removeOperations.RemeoveWithWhereClause(whereClaues);
+        }
+        public int Remove(string id)
+        {
+            return _removeOperations.Remove(id);
+        }
+        public int RemoveAll()
+        {
+            return _removeOperations.RemoveAll();
+        }
         public IEnumerable<T> Select(string whereClause = null, string joinDirection = "inner", bool isDistinct = false, int top = -1)
         {
             return _selectOperations.Select(whereClause, joinDirection, isDistinct, top);

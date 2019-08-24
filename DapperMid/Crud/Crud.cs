@@ -45,5 +45,17 @@ namespace DapperMid.Crud
         {
             throw new NotImplementedException();
         }
+        public int RemoveAll()
+        {
+            return _crudOperations.RemoveAll();
+        }
+        public int Remove(string id)
+        {
+            return _crudOperations.Remove(id);
+        }
+        public int RemeoveWithWhereClause(string whereClaues)
+        {
+            return _crudOperations.RemeoveWithWhereClause(whereClaues);
+        }
     }
 }

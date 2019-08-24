@@ -1,4 +1,5 @@
 ﻿using System.Data.SqlClient;
+
 namespace DapperMid.Interfaces.CtorInterfaces
 {
     /// <summary>
