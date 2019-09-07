@@ -25,7 +25,7 @@ namespace DapperMid
             //var person = new Person("ad3213s", adress, personSecret, personCard);
             //  var result = personTable.Insert(person);
             //Console.WriteLine($"{result} ");
-            var deletedCount = personTable.Remove("d60eea67-fb72-4e88-a403-ab93cc3f2fe8");
+            var deletedCount = personTable.RemeoveWithWhereClause(x => x.Adress.Id == "5" || x.PersonCard.Id == "", null);
             Console.WriteLine(deletedCount);
             //Console.WriteLine(personCtor.Min(x => x.Id));
             // Console.WriteLine(personTable?.Count());

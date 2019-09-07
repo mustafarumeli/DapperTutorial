@@ -4,6 +4,7 @@ using DapperMid.PrototypeClasses;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace DapperMid.Crud
@@ -48,10 +49,12 @@ namespace DapperMid.Crud
         {
             throw new NotImplementedException();
         }
-        public int RemeoveWithWhereClause(string whereClaues)
+        public int RemeoveWithWhereClause(Expression<Predicate<T>> expression, object obj)
         {
-            return _removeOperations.RemeoveWithWhereClause(whereClaues);
+            return _removeOperations.RemeoveWithWhereClause(expression, obj);
+
         }
+
         public int Remove(string id)
         {
             return _removeOperations.Remove(id);

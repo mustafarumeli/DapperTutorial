@@ -8,7 +8,7 @@ namespace DapperMid.PrototypeClasses
     {
         public string GetRemoveCommand()
         {
-            return $"Delete from {typeof(T).Name}";
+            return $"Delete {typeof(T).Name} from {typeof(T).Name}";
         }
     }
 }

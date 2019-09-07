@@ -1,12 +1,14 @@
 ﻿using Dapper;
 using DapperMid.Attributes;
 using DapperMid.DataTables;
+using DapperMid.Interfaces;
 using DapperMid.Interfaces.CtorInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Dynamic;
 using System.Linq;
+using System.Reflection;
 
 namespace DapperMid.PrototypeClasses
 {
@@ -39,14 +41,14 @@ namespace DapperMid.PrototypeClasses
             Type entityType = entity.GetType();
             foreach (var prop in entityType.GetProperties())
             {
-                var fkAttr = prop.CustomAttributes.FirstOrDefault(x => x.AttributeType == fKType);
+                var fkAttr = prop.GetCustomAttribute<ForeignKeyAttribute>();
                 if (fkAttr != null)  // If property is reffering a Foreign Key  then
                 {
                     // We get that object
                     var innerObj = prop.GetValue(entity);
                     _insertInside.Insert((Datatable)innerObj); // We insert it to the database (recursively)
-                    var id = innerObj.GetType().GetProperty("Id").GetValue(innerObj); // We get the id of it
-                    string fkName = fkAttr.ConstructorArguments[0].Value.ToString(); // We get the Field Name in Database
+                    var id = innerObj.GetType().GetProperty(nameof(IDatatable<T>.Id)).GetValue(innerObj); // We get the id of it
+                    string fkName = fkAttr.Name; // We get the Field Name in Database
                     expandoDict.Add(fkName, id); // We add it to expando with using dict (it will eventually will be a property(woah!!))
                 }
                 else // If property is not a Foreign Key then

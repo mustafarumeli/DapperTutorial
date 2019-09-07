@@ -3,6 +3,7 @@ using DapperMid.Interfaces.CtorInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq.Expressions;
 using System.Reflection;
 namespace DapperMid.Crud
 {
@@ -53,9 +54,11 @@ namespace DapperMid.Crud
         {
             return _crudOperations.Remove(id);
         }
-        public int RemeoveWithWhereClause(string whereClaues)
+
+        public int RemeoveWithWhereClause(Expression<Predicate<T>> expression, object obj)
         {
-            return _crudOperations.RemeoveWithWhereClause(whereClaues);
+            return _crudOperations.RemeoveWithWhereClause(expression,obj);
+
         }
     }
 }

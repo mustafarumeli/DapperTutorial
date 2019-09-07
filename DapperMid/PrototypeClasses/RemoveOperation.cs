@@ -2,6 +2,7 @@
 using DapperMid.Interfaces.CtorInterfaces;
 using System;
 using System.Data.SqlClient;
+using System.Linq.Expressions;
 
 namespace DapperMid.PrototypeClasses
 {
@@ -20,9 +21,9 @@ namespace DapperMid.PrototypeClasses
             _removeAll = new RemoveAllOperation<T>(db, _removeCommand);
         }
 
-        public int RemeoveWithWhereClause(string whereClaues)
+        public int RemeoveWithWhereClause(Expression<Predicate<T>> expression, object obj)
         {
-            return _removeWithWhere.RemeoveWithWhereClause(whereClaues);
+            return _removeWithWhere.RemeoveWithWhereClause(expression,obj);
         }
 
         public int Remove(string id)

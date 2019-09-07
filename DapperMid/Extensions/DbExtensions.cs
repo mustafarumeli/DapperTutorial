@@ -7,10 +7,8 @@ using System.Linq.Expressions;
 
 namespace DapperMid.Extensions
 {
-
     public static class DbExtensions
     {
-
         /// <summary>
         /// Uses Dapper. Creates a select statement with count  
         /// </summary>
@@ -27,13 +25,13 @@ namespace DapperMid.Extensions
         /// Uses Dapper, Creates a select statetment which adds given column together and returns result  
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <typeparam name="P">Must be numerical but all i can do is struct and IConvertible</typeparam>
+        /// <typeparam name="P">Must be numerical</typeparam>
         /// <param name="self"></param>
         /// <param name="expression"></param>
         /// <returns>Summation of given column at expression</returns>
         public static P Sum<T, P>(this Crud<T> self, Expression<Func<T, P>> expression)
               where T : Datatable
-              where P : struct, IConvertible
+              where P : unmanaged
         {
             string name = "Id";
             if (expression.Body is UnaryExpression unaryExp && unaryExp.Operand is MemberExpression memberExp)
@@ -56,13 +54,13 @@ namespace DapperMid.Extensions
         /// Uses Dapper, Creates a select statetment to find minimum value of given column
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <typeparam name="P">Must be numerical but all i can do is struct and IConvertible</typeparam>
+        /// <typeparam name="P">Must be numerical</typeparam>
         /// <param name="self"></param>
         /// <param name="expression"></param>
         /// <returns>Minimum value  of given column</returns>
         public static P Min<T, P>(this Crud<T> self, Expression<Func<T, P>> expression)
             where T : Datatable
-            where P : struct, IConvertible
+            where P : unmanaged
         {
             string name = "Id";
             if (expression.Body is UnaryExpression unaryExp && unaryExp.Operand is MemberExpression memberExp)
@@ -85,13 +83,13 @@ namespace DapperMid.Extensions
         /// Uses Dapper, Creates a select statetment to find maximum value of given column
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <typeparam name="P">Must be numerical but all i can do is struct and IConvertible</typeparam>
+        /// <typeparam name="P">Must be numerical</typeparam>
         /// <param name="self"></param>
         /// <param name="expression"></param>
         /// <returns>Max value  of given column</returns>
         public static P Max<T, P>(this Crud<T> self, Expression<Func<T, P>> expression)
             where T : Datatable
-            where P : struct, IConvertible
+            where P : unmanaged
         {
             string name = "Id";
             if (expression.Body is UnaryExpression unaryExp && unaryExp.Operand is MemberExpression memberExp)
@@ -114,13 +112,13 @@ namespace DapperMid.Extensions
         /// Uses Dapper, Creates a select statetment to find avarage value of given column
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <typeparam name="P">Must be numerical but all i can do is struct and IConvertible</typeparam>
+        /// <typeparam name="P">Must be numerical</typeparam>
         /// <param name="self"></param>
         /// <param name="expression"></param>
         /// <returns>Avarage value  of given column</returns>
         public static double Avg<T, P>(this Crud<T> self, Expression<Func<T, P>> expression)
             where T : Datatable
-            where P : struct, IConvertible
+            where P : unmanaged
         {
             string name = "Id";
             if (expression.Body is UnaryExpression unaryExp && unaryExp.Operand is MemberExpression memberExp)

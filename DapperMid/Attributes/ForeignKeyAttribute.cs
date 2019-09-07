@@ -7,14 +7,14 @@ namespace DapperMid.Attributes
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     class ForeignKeyAttribute : Attribute
     {
-        string _name;
+        public string Name { get; }
         /// <summary>
         /// Name should be equal to column name in sql
         /// </summary>
         /// <param name="name">Name of Column in Sql</param>
         public ForeignKeyAttribute(string name)
         {
-            _name = name ?? throw new ArgumentNullException(nameof(name));
+            Name = name ?? throw new ArgumentNullException(nameof(name));
         }
     }
 }

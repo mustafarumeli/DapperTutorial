@@ -10,6 +10,7 @@ namespace DapperMid.PrototypeClasses
 
     class InsertCommand<T> : IInsertCommand<T> where T : Datatable
     {
+        int t;
         public string GetInsertCommand(Type type = null)
         {
             type ??= typeof(T);
